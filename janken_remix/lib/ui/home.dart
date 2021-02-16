@@ -37,12 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
     Navigator.of(context)
         .pushReplacement(fadeTransitionPageRouteBuilder(AppPage.normalJanken));
-    // Future.delayed(const Duration(milliseconds: 200)).then((_) {
-    //   final route = pushTransition(
-    //     page: UserListPage(botInfo: indexedInfo.info),
-    //   );
-    //   Navigator.of(context).push(route);
-    // });
   }
 
   PageRoute pushTransition({Widget page}) {

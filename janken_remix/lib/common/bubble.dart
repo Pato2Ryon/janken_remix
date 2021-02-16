@@ -9,8 +9,9 @@ class Bubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 300,
       height: 100,
-      padding: EdgeInsets.all(16),
+      // padding: EdgeInsets.all(16),
       decoration: ShapeDecoration(
         color: color,
         shadows: [
@@ -25,7 +26,7 @@ class Bubble extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(text),
+          Center(child: Text(text)),
         ],
       ),
     );

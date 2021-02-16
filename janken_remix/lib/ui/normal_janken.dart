@@ -33,24 +33,33 @@ class CustomVisibleNotifier extends ChangeNotifier {
 }
 
 class NormalJankenPage extends StatelessWidget {
-  String _image = Janken.gu.img;
-  String _enemyImage = Janken.gu.img;
+  String _userHand = Janken.gu.img;
+  String _enemyHand = Janken.gu.img;
+  String _enemyImage = 'assets/images/amabie1_smile.png';
+  String _serif = '';
   int _enemyChoice;
   int _result;
+  int _second = 0;
 
-  void setJanken(int userChoice) {
+  void setJanken(BuildContext context, int userChoice) {
+    _second = 300;
     var random = new math.Random();
     _enemyChoice = random.nextInt(2);
-    _enemyImage = Janken.values[_enemyChoice].img;
+    _userHand = Janken.values[userChoice].img;
+    _enemyHand = Janken.values[_enemyChoice].img;
     _result = (userChoice - _enemyChoice + 3) % 3;
     print(_result);
     if (_result == 0) {
-      print("アイコ");
+      _serif = 'もう一回！';
+      _enemyImage = 'assets/images/amabie1_smile.png';
     } else if (_result == 1) {
-      print("負け");
+      _serif = '負けちゃった';
+      _enemyImage = 'assets/images/amabie3_cry.png';
     } else {
-      print("勝ち");
+      _serif = 'やったー！';
+      _enemyImage = 'assets/images/amabie4_laugh.png';
     }
+    context.read(resultVisibleProvider).resultVisible = true;
   }
 
   @override
@@ -61,10 +70,6 @@ class NormalJankenPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // if (context.read(resultVisibleProvider).resultVisible)
-          //   Container(
-          //     child: Text('aaaa'),
-          //   ),
           Align(
               alignment: Alignment.topCenter,
               child: Text(
@@ -72,7 +77,7 @@ class NormalJankenPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 50,
                   color: Colors.orange.shade200,
-                  fontFamily: "HigashiOmeGothic",
+                  fontFamily: 'HigashiOmeGothic',
                 ),
               )),
           RaisedButton(
@@ -80,41 +85,18 @@ class NormalJankenPage extends StatelessWidget {
             color: Colors.orange,
             textColor: Colors.white,
             onPressed: () {
-              // context.read(cardVisibleProvider).resultVisible = false;
+              _second = 0;
+              _enemyImage = 'assets/images/amabie1_smile.png';
               context.read(resultVisibleProvider).resultVisible = false;
             },
           ),
           Center(
-            child: JankenRow(context),
-          ),
-          Center(
             child: ResultRow(context),
           ),
-          Consumer(builder: (context, watch, child) {
-            return Container(
-              child: Align(
-                alignment: Alignment(0, 0.8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Bubble('あああああああああああああああああああ',
-                        Color.fromARGB(255, 255, 150, 180)),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Image.asset(
-                          'assets/images/amabie1_smile.png',
-                          width: 120,
-                          height: 120,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
+          Center(
+            child: JankenRow(context),
+          ),
+          EnemyRow(context),
         ],
       ),
     );
@@ -125,31 +107,27 @@ class NormalJankenPage extends StatelessWidget {
       final visible = !watch(resultVisibleProvider).resultVisible;
       return Visibility(
           visible: visible,
+          // opacity: visible ? 1.0 : 0.0,
+          // duration: Duration(milliseconds: _jankenSecond),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               JankenCard(
                 image: Janken.gu.img,
                 onTap: () {
-                  _image = Janken.gu.img;
-                  setJanken(Janken.gu.poi);
-                  context.read(resultVisibleProvider).resultVisible = true;
+                  setJanken(context, Janken.gu.poi);
                 },
               ),
               JankenCard(
                 image: Janken.choki.img,
                 onTap: () {
-                  _image = Janken.choki.img;
-                  setJanken(Janken.choki.poi);
-                  context.read(resultVisibleProvider).resultVisible = true;
+                  setJanken(context, Janken.choki.poi);
                 },
               ),
               JankenCard(
                 image: Janken.pa.img,
                 onTap: () {
-                  _image = Janken.pa.img;
-                  setJanken(Janken.pa.poi);
-                  context.read(resultVisibleProvider).resultVisible = true;
+                  setJanken(context, Janken.pa.poi);
                 },
               ),
             ],
@@ -160,40 +138,87 @@ class NormalJankenPage extends StatelessWidget {
   Consumer ResultRow(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
       final visible = watch(resultVisibleProvider).resultVisible;
-      return Visibility(
-        visible: visible,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(5.0),
-              width: 200,
-              height: 300,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Image.asset(
-                _image,
-                width: 120,
-                height: 120,
-              ),
+      return AnimatedOpacity(
+        opacity: visible ? 1.0 : 0.0,
+        duration: Duration(milliseconds: _second),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 200,
+                  child: Center(child: Text('YOU')),
+                ),
+                Container(
+                  width: 200,
+                  child: Center(child: Text('アマビエ')),
+                ),
+              ],
             ),
-            Container(
-              padding: const EdgeInsets.all(5.0),
-              width: 200,
-              height: 300,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Image.asset(
-                _enemyImage,
-                width: 120,
-                height: 120,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(5.0),
+                  width: 200,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Image.asset(
+                    _userHand,
+                    width: 120,
+                    height: 120,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(5.0),
+                  width: 200,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Image.asset(
+                    _enemyHand,
+                    width: 120,
+                    height: 120,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Consumer EnemyRow(BuildContext context) {
+    return Consumer(builder: (context, watch, child) {
+      final visible = watch(resultVisibleProvider).resultVisible;
+      return Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Visibility(
+              visible: visible,
+              child: Bubble(_serif, Color.fromARGB(255, 255, 150, 180)),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  _enemyImage,
+                  width: 120,
+                  height: 120,
+                ),
+              ],
             ),
           ],
         ),
