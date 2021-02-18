@@ -8,10 +8,10 @@ class Bubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size deviceSize = MediaQuery.of(context).size;
     return Container(
-      width: 300,
-      height: 100,
-      // padding: EdgeInsets.all(16),
+      width: deviceSize.width * 2 / 3,
+      height: deviceSize.height / 9,
       decoration: ShapeDecoration(
         color: color,
         shadows: [

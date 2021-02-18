@@ -41,7 +41,7 @@ class NormalJankenPage extends StatelessWidget {
   int _result;
   int _second = 0;
 
-  void setJanken(BuildContext context, int userChoice) {
+  void _setJanken(BuildContext context, int userChoice) {
     _second = 300;
     var random = new math.Random();
     _enemyChoice = random.nextInt(2);
@@ -91,43 +91,41 @@ class NormalJankenPage extends StatelessWidget {
             },
           ),
           Center(
-            child: ResultRow(context),
+            child: _resultRow(context),
           ),
           Center(
-            child: JankenRow(context),
+            child: _jankenRow(context),
           ),
-          EnemyRow(context),
+          _enemyRow(context),
         ],
       ),
     );
   }
 
-  Consumer JankenRow(BuildContext context) {
+  Consumer _jankenRow(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
       final visible = !watch(resultVisibleProvider).resultVisible;
       return Visibility(
           visible: visible,
-          // opacity: visible ? 1.0 : 0.0,
-          // duration: Duration(milliseconds: _jankenSecond),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               JankenCard(
                 image: Janken.gu.img,
                 onTap: () {
-                  setJanken(context, Janken.gu.poi);
+                  _setJanken(context, Janken.gu.poi);
                 },
               ),
               JankenCard(
                 image: Janken.choki.img,
                 onTap: () {
-                  setJanken(context, Janken.choki.poi);
+                  _setJanken(context, Janken.choki.poi);
                 },
               ),
               JankenCard(
                 image: Janken.pa.img,
                 onTap: () {
-                  setJanken(context, Janken.pa.poi);
+                  _setJanken(context, Janken.pa.poi);
                 },
               ),
             ],
@@ -135,7 +133,7 @@ class NormalJankenPage extends StatelessWidget {
     });
   }
 
-  Consumer ResultRow(BuildContext context) {
+  Consumer _resultRow(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
       final visible = watch(resultVisibleProvider).resultVisible;
       return AnimatedOpacity(
@@ -198,29 +196,36 @@ class NormalJankenPage extends StatelessWidget {
     });
   }
 
-  Consumer EnemyRow(BuildContext context) {
+  Consumer _enemyRow(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
       final visible = watch(resultVisibleProvider).resultVisible;
-      return Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            Visibility(
-              visible: visible,
-              child: Bubble(_serif, Color.fromARGB(255, 255, 150, 180)),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Image.asset(
-                  _enemyImage,
-                  width: 120,
-                  height: 120,
-                ),
-              ],
-            ),
-          ],
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          height: 200,
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Opacity(
+                opacity: visible ? 1.0 : 0.0,
+                // visible: visible,
+                child: Bubble(_serif, Color.fromARGB(255, 255, 150, 180)),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text('アマビエ'),
+                  Image.asset(
+                    _enemyImage,
+                    width: 120,
+                    height: 120,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       );
     });
