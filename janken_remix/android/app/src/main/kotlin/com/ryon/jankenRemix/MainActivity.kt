@@ -1,4 +1,4 @@
-package com.example.janken_remix
+package com.ryon.jankenRemix
 
 import io.flutter.embedding.android.FlutterActivity
 
