@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:janken_remix/ui/normal_janken.dart';
+import 'package:janken_remix/ui/test.dart';
 
-
-enum AppPage { root, normalJanken }
+enum AppPage { root, normalJanken, test }
 
 extension AppPageExtension on AppPage {
   String get routeName {
@@ -11,6 +11,8 @@ extension AppPageExtension on AppPage {
         return '/';
       case AppPage.normalJanken:
         return 'normalJanken';
+      case AppPage.test:
+        return 'test';
       default:
         return null;
     }
@@ -22,6 +24,8 @@ extension AppPageExtension on AppPage {
         return null;
       case AppPage.normalJanken:
         return NormalJankenPage();
+      case AppPage.test:
+        return TestPage();
     }
   }
 }

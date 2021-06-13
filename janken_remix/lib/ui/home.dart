@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _handlePressed() {
     setState(() {});
     Navigator.of(context)
-        .pushReplacement(fadeTransitionPageRouteBuilder(AppPage.normalJanken));
+        .pushReplacement(fadeTransitionPageRouteBuilder(AppPage.test));
   }
 
   PageRoute pushTransition({Widget page}) {
@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.title ?? "aa"),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
